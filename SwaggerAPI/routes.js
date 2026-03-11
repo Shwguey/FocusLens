@@ -12,7 +12,8 @@
  *     description: >
  *       Frontend AWS SDK calls made directly from cognitoAuth.ts to AWS Cognito.
  *       These are not HTTP endpoints — they use the @aws-sdk/client-cognito-identity-provider package.
- *       Documented here for reference only.
+ *       Check with AWS for proper documentation, here it exists as reference.
+ *       
  */
 
 /**
@@ -126,7 +127,7 @@
  *   post:
  *     tags: [Backend]
  *     summary: Complete email verification
- *     description: Marks the user as verified in RDS and deletes them from Cognito. Called after Cognito confirms the verification code.
+ *     description: Marks the user as verified in RDS (done by uEmail = ?) and deletes them from Cognito. Called after Cognito confirms the verification code.
  *     requestBody:
  *       required: true
  *       content:
@@ -170,7 +171,7 @@
  *   post:
  *     tags: [Backend]
  *     summary: Manually delete a Cognito user
- *     description: Fallback endpoint to manually remove a user from Cognito. Not called automatically.
+ *     description: Fallback endpoint to manually remove a user from Cognito. Not called automatically. Used for blockage (cognito side) clearing if it occurs.
  *     requestBody:
  *       required: true
  *       content:
