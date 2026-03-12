@@ -6,6 +6,7 @@ import {
   cognitoConfirmSignUp,
   cognitoResendCode,
 } from "./cognitoAuth";
+import { useAuth } from "../../context/AuthContext";
 
 //Form stages, used to determine which form to show and which API calls to make on submit
 type Stage = "login" | "register" | "verify";
@@ -23,6 +24,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);          //Checkbox for showing password
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   //Password requirement checks
   const passwordRequirements = [
@@ -121,6 +123,7 @@ function Login() {
       const data = await res.json();
 
       if (data.success) {
+        login({ username: data.username, email: data.email });
         navigate("/");
       } else {
         alert(data.message || "Incorrect email or password");
