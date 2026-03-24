@@ -5,7 +5,7 @@ import cors from "cors";
 import pkg from "aws-sdk";
 const { CognitoIdentityServiceProvider, config: awsConfig } = pkg;
 
-// AWS credentials — add these to your .env file
+//AWS credentials, add these to your .env file if they're not there already
 awsConfig.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -17,6 +17,15 @@ BUGS NEED FIXING:
 rn when registering for account, dupe emails are not allowed,
 so if you spam register with the same email, a new account will not be made,
 BUT, UserID still gets incremented, resulting in incosistency between # of users and userIDs
+
+TO ADD:
+Friend feature where users can add other unique users to a friend list.
+Several inital checks, isUserVerifed? isRequestSent? requestStatus? (update base on needs),
+This also requries new APIs such as /send-friend-request and such,
+make to update swagger API routes when adding
+
+D3 Observe, to graph db values and poten tables, point is to have it run as a server.js
+without external softwares to be downloaded 
 */
 
 dotenv.config();
