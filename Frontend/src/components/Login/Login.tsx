@@ -122,7 +122,9 @@ function Login() {
       });
       const data = await res.json();
 
+      //This sections works with AuthContext to store user info globally 
       if (data.success) {
+        //used for f12 console 
         console.log('login data:', data);
         login({                
           username: data.username,

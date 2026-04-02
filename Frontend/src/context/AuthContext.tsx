@@ -16,9 +16,24 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const login = (userData: User) => setUser(userData);
-  const logout = () => setUser(null);
+  const [user, setUser] = useState<User | null>(() => {
+    //fix, where refreshing page will no wipe user info,
+    //tldr, prevent page refresh from logging out user 
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored) : null;
+  });
+
+  //login stores user info in both state
+  const login = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));  
+  };
+
+  //for future use when logout is added 
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');  
+  };
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
@@ -45,4 +60,6 @@ interface User {
 
 meaning any info that needs to be used, for context or any-else, can be stored here,
 to be more specific, its user identification info that are stored here 
+
+this info is also logged by f12 console, login data from login.tsx 
 */

@@ -28,12 +28,13 @@ const RightSidebar = ({ isSessionActive, onToggleSession }: RightSidebarProps) =
       const endTime = toMySQLDateTime(new Date().toISOString());
       setSessionEnd(endTime);
 
-
+      //f12 console logging 
       console.log('userId:', user?.userId);
       console.log('sessionStart:', sessionStart);
       console.log('sessionEnd:', endTime);
 
       try {
+        //post data to backend API for storage 
         const res =await fetch('http://100.27.212.225:5000/session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

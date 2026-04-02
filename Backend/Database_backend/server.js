@@ -74,6 +74,7 @@ app.get("/", (req, res) => {
 });
 
 //UserSession API, saves user info into db after ending session 
+//Note that avgFocus is set to 0, update when data could be fetched for it
 app.post("/session", async (req, res) => {
   const { userId, sessionStart, sessionEnd } = req.body;
   try {
@@ -115,11 +116,14 @@ app.post("/login", async (req, res) => {
     [email, password]
   );
 
+  //row>0 means user already exist 
   if (rows.length > 0) {
     //Block unverified users from logging in
     if (!rows[0].verified) {
       return res.json({ success: false, message: "Please verify your email before logging in." });
     }
+    //note that since user info are unique, rows[0] is the only row,
+    //and it represents said users info 
     res.json({ success: true, 
                username: rows[0].uName,
                email: rows[0].uEmail, 
