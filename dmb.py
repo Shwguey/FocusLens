@@ -91,7 +91,7 @@ def handle_tracking(data):
             if absent_frames > 35:
                 socketio.emit('status_update', {'status': 'USER ABSENT', 'remaining': int(300 - active_time)})
 
-        # Save to MySQL every 5 Minutes 
+        # Save to MySQL every 5 Minutes, make post request to backend
         if active_time >= 300:
             avg_feat = np.mean(buffer, axis=0)
             ratio = dist_frames / total_frames
