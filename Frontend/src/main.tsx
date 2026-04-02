@@ -14,6 +14,7 @@ const cognitoAuthConfig = {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    {/* AuthProvider wrapper to provide the app with cognito authentication possible within all components */}
     <AuthProvider {...cognitoAuthConfig}>
       <App />
     </AuthProvider>
@@ -25,4 +26,5 @@ VERY IMPORTANT:
 swap it back to the CloudFront URL before deploying to production
 meaning use envs before final deploy!!!!
 
+Can do so after fronend is hosted 
 */
