@@ -123,6 +123,7 @@ function Login() {
       const data = await res.json();
 
       if (data.success) {
+        console.log('login data:', data);
         login({                
           username: data.username,
           email: data.email,
