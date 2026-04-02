@@ -70,6 +70,21 @@ app.get("/", (req, res) => {
   res.send("Backend server is running");
 });
 
+//UserSession API, saves user info into db after ending session 
+app.post("/session", async (req, res) => {
+  const { userId, sessionStart, sessionEnd } = req.body;
+  try {
+    await db.execute(
+      "INSERT INTO UserSession (UserID, sessionStart, sessionEnd, avgFocus) VALUES (?, ?, ?, ?)",
+      [userId, sessionStart, sessionEnd, 0]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Session insert error" });
+  }
+});
+
 //Register API, saves user as unverified until email is confirmed
 app.post("/register", async (req, res) => {
   const { email, username, password } = req.body;
@@ -102,7 +117,10 @@ app.post("/login", async (req, res) => {
     if (!rows[0].verified) {
       return res.json({ success: false, message: "Please verify your email before logging in." });
     }
-    res.json({ success: true, username: rows[0].uName, email: rows[0].uEmail });
+    res.json({ success: true, 
+               username: rows[0].uName,
+               email: rows[0].uEmail, 
+               userId: rows[0].UserI });
   } else {
     res.json({ success: false, message: "Invalid email or password" });
   }

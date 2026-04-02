@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { useAuth } from "../../context/AuthContext"
 import {
   cognitoSignUp,
   cognitoConfirmSignUp,
@@ -18,6 +19,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleResendCode = async () => {
     try {
@@ -87,6 +89,11 @@ function Login() {
       const data = await res.json();
 
       if (data.success) {
+        login({                
+          username: data.username,
+          email: data.email,
+          userId: data.userId,
+        });
         navigate("/");
       } else {
         alert(data.message || "Invalid email or password");
