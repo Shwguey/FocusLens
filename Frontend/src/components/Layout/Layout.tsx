@@ -10,10 +10,11 @@ interface LayoutProps {
 
 const Layout = ({ isSessionActive, onToggleSession }: LayoutProps) => {
   const location = useLocation();
+  const fromLogin = location.state?.fromLogin === true;
 
   return (
-    //Key forces remount and replays animation on every navigation
-    <div className="layout-container" key={location.pathname}>
+    //Ternary to ensure animation occurs on login only 
+    <div className={`layout-container ${fromLogin ? 'animate-in' : ''}`}>
       <TopBar />
       <div className="layout-body">
         <main className="main-content">

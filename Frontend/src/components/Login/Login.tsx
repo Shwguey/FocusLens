@@ -147,7 +147,7 @@ function Login() {
         }
         //Wait for animation to finish before navigating
         setTimeout(() => {
-          navigate('/');
+          navigate('/', { state: { fromLogin: true } });
         }, 400);
       } else {
         alert(data.message || "Incorrect email or password");

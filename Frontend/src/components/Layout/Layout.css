@@ -6,7 +6,6 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
-  animation: scaleIn 0.6s cubic-bezier(0.25, 1, 0.35, 1) forwards;
 }
 
 .layout-body {
@@ -20,4 +19,8 @@
   overflow-y: auto;
   background-color: #1a1a1a;
   padding: 0;
+}
+
+.animate-in {
+  animation: scaleIn 0.8s ease forwards;
 }
