@@ -86,6 +86,58 @@
 
 /**
  * @swagger
+ * /sessions/{userId}:
+ *   get:
+ *     tags: [Backend]
+ *     summary: Fetch 3 most recent sessions for a user
+ *     description: Retrieves the 3 most recent sessions from UserSession table for a given user, ordered by most recent first. Called from Home.tsx to populate session snapshot cards.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: FK reference to UserData.UserID
+ *     responses:
+ *       200:
+ *         description: Sessions fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 sessions:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       sessionStart:
+ *                         type: string
+ *                         example: 2026-04-04T23:43:05.000Z
+ *                       sessionEnd:
+ *                         type: string
+ *                         example: 2026-04-04T23:43:06.000Z
+ *       500:
+ *         description: Failed to fetch sessions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Failed to fetch sessions
+ */
+
+/**
+ * @swagger
  * /register:
  *   post:
  *     tags: [Backend]
