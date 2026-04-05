@@ -5,9 +5,9 @@ import './index.css'
 import App from './App.tsx'
 
 const cognitoAuthConfig = {
-  authority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_F6PXA7rXB",
-  client_id: "6i2mrsmdmtbqvt87179jp64an1",
-  redirect_uri: "http://localhost:5173",
+  authority: import.meta.env.VITE_COGNITO_AUTHORITY,
+  client_id: import.meta.env.VITE_COGNITO_CLIENT_ID,
+  redirect_uri: import.meta.env.VITE_REDIRECT_URI,
   response_type: "code",
   scope: "email openid phone",
 };
@@ -20,11 +20,3 @@ createRoot(document.getElementById('root')!).render(
     </AuthProvider>
   </StrictMode>,
 )
-
-/*
-VERY IMPORTANT:
-swap it back to the CloudFront URL before deploying to production
-meaning use envs before final deploy!!!!
-
-Can do so after fronend is hosted 
-*/
