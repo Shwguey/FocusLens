@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -12,10 +13,17 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  //Light/dark mode toggle, defaults to dark
+  const [isDark, setIsDark] = useState(true);
+
+  //Apply theme on mount and on change
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
+
   const handleLogout = () => {
     logout();
     onClose();
-
     //Scale out the layout before changing to login
     const el = document.querySelector('.layout-container') as HTMLElement | null;
     if (el) {
@@ -47,6 +55,19 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </Link>
           </div>
           <div className="sidebar-bottom">
+            {/* Light/dark mode toggle */}
+            <div className="theme-toggle">
+              <span>{isDark ? 'Dark mode' : 'Light mode'}</span>
+              <label className="toggle-switch">
+                <input
+                  type="checkbox"
+                  checked={!isDark}
+                  onChange={() => setIsDark(prev => !prev)}
+                />
+                <span className="toggle-slider"></span>
+              </label>
+            </div>
+
             {/* Only show Log Out button when user is logged in
                 Note: since login form is presented at the start,
                 no need for login/register buttons, as users will never 

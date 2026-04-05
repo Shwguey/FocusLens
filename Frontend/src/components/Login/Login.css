@@ -3,10 +3,11 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: var(--bg-primary);
 }
 
 .login-box {
-  background: #1e1e1e;
+  background: var(--bg-secondary);
   padding: 30px;
   border-radius: 12px;
   width: 320px;
@@ -14,6 +15,7 @@
   flex-direction: column;
   gap: 12px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  animation: scaleIn 0.8s ease forwards;
 }
 
 .login-box h2 {
@@ -22,7 +24,7 @@
 }
 
 .subtitle {
-  color: #aaa;
+  color: var(--text-secondary);
   font-size: 0.9em;
   margin-top: 0;
   margin-bottom: 4px;
@@ -44,7 +46,7 @@
 .input-group label {
   font-size: 0.85em;
   font-weight: 600;
-  color: #ddd;
+  color: var(--text-primary);
 }
 
 .login-box input[type="text"],
@@ -52,9 +54,9 @@
 .login-box input[type="password"] {
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #555;
-  background: #121212;
-  color: white;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-size: 1em;
 }
 
@@ -81,7 +83,7 @@
 }
 
 .req-unmet {
-  color: #999;
+  color: var(--text-secondary);
 }
 
 .req-met {
@@ -98,7 +100,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.85em;
-  color: #ddd;
+  color: var(--text-primary);
   cursor: pointer;
 }
 
@@ -141,7 +143,7 @@
 
 .verify-info {
   font-size: 0.9em;
-  color: #ccc;
+  color: var(--text-secondary);
   text-align: center;
 }
 
@@ -157,8 +159,4 @@
 
 .resend-btn:hover {
   background: #646cff22;
-}
-
-.login-box {
-  animation: scaleIn 0.8s ease forwards;
 }

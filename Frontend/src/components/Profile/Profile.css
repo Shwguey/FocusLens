@@ -16,19 +16,19 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background-color: #404040;
-  border: 3px solid #888;
+  background-color: var(--border-color);
+  border: 3px solid var(--text-secondary);
 }
 
 .account-name {
   font-size: 24px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.87);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .account-email {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-secondary);
   margin: 0;
 }
