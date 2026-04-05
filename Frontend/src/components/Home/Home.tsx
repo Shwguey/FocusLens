@@ -59,7 +59,9 @@ const Home = () => {
         const res = await fetch(`${API_URL}/sessions/${user.userId}`);
         const data = await res.json();
         console.log('Home: sessions fetched:', data);
-        if (data.success) setSessions(data.sessions); 
+        if (data.success) {
+          setSessions(data.sessions);
+        }
       } catch (err) {
         console.error('Failed to fetch sessions:', err);
       }
@@ -77,12 +79,12 @@ const Home = () => {
           {sessions.length === 0 ? (
             <p className="no-sessions">No sessions recorded yet.</p>
           ) : (
-            sessions.map((session, index) => {
+            sessions.map((session, animationKey) => {
             const start = formatDateTime(session.sessionStart);
             const end = formatDateTime(session.sessionEnd);
             const duration = calcTotalDuration(session.sessionStart, session.sessionEnd);
             return (
-              <div className="snapshot-card" key={`${index}-${session.sessionStart}`}>
+              <div className="snapshot-card" key={`${animationKey}-${session.sessionStart}`}>
                   <div className="snapshot-row">
                     <span className="snapshot-label">Date</span>
                     <span className="snapshot-value">{start.date}</span>
