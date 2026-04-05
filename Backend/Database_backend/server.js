@@ -212,7 +212,6 @@ app.put("/user/email", async (req, res) => {
         Username: newEmail,
       }).promise();
     } catch (cognitoErr) {
-      console.log(`server.js: Cognito user deleted for email update: ${newEmail}`);
       //Non-fatal, log and continue, resolve on cognito side if this shows up
       console.error("server.js: Cognito delete error (non-fatal):", cognitoErr.message);
     }
