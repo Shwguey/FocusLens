@@ -1,13 +1,15 @@
+/* Note: login.css is hardcoded to display in dark mode only */
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #242424;
 }
 
 .login-box {
-  background: var(--bg-secondary);
+  background: #1e1e1e;
   padding: 30px;
   border-radius: 12px;
   width: 320px;
@@ -21,10 +23,11 @@
 .login-box h2 {
   text-align: left;
   margin-bottom: 2px;
+  color: rgba(255, 255, 255, 0.87);
 }
 
 .subtitle {
-  color: var(--text-secondary);
+  color: #aaa;
   font-size: 0.9em;
   margin-top: 0;
   margin-bottom: 4px;
@@ -46,7 +49,7 @@
 .input-group label {
   font-size: 0.85em;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #ddd;
 }
 
 .login-box input[type="text"],
@@ -54,9 +57,9 @@
 .login-box input[type="password"] {
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  border: 1px solid #555;
+  background: #121212;
+  color: white;
   font-size: 1em;
 }
 
@@ -83,7 +86,7 @@
 }
 
 .req-unmet {
-  color: var(--text-secondary);
+  color: #999;
 }
 
 .req-met {
@@ -100,7 +103,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.85em;
-  color: var(--text-primary);
+  color: #ddd;
   cursor: pointer;
 }
 
@@ -108,6 +111,7 @@
   cursor: pointer;
   width: 14px;
   height: 14px;
+  accent-color: #646cff;
 }
 
 .submit-btn {
@@ -143,7 +147,7 @@
 
 .verify-info {
   font-size: 0.9em;
-  color: var(--text-secondary);
+  color: #ccc;
   text-align: center;
 }
 
