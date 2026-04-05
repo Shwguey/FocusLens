@@ -2,6 +2,13 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import './Profile.css';
 
+/*
+TODOS:
+
+add in profile and banner editing (aws s3)
+add in email editing (needs to send verification, cognito calls)
+*/
+
 const Profile = () => {
   const { user, updateUser } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL;
@@ -70,7 +77,19 @@ const Profile = () => {
     }
   };
 
-  //Handles password update, validates current password before updating
+  //Copied from login.tsx requirements 
+  //only checks 'new password' and not 'confirm new password'
+  //since they have to match anyways 
+  const passwordRequirements = [
+    { label: "Password must be at least 8 characters", met: newPassword.length >= 8 },
+    { label: "Use a number", met: /\d/.test(newPassword) },
+    { label: "Use a lowercase letter", met: /[a-z]/.test(newPassword) },
+    { label: "Use an uppercase letter", met: /[A-Z]/.test(newPassword) },
+    { label: "Use a special character", met: /[^A-Za-z0-9]/.test(newPassword) },
+  ];
+  const allRequirementsMet = passwordRequirements.every((r) => r.met);
+
+  //Handles password update, validates current password, and requirements before updating
   const handlePasswordUpdate = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
       setModalError('All fields are required');
@@ -80,6 +99,11 @@ const Profile = () => {
       setModalError('New passwords does not match');
       return;
     }
+    if (!allRequirementsMet) {
+      setModalError("Password requirements not met.");
+      return;
+    }
+
     setModalLoading(true);
     try {
       const res = await fetch(`${API_URL}/user/password`, {
