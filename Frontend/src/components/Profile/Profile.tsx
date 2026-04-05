@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { cognitoSignUp, cognitoConfirmSignUp, cognitoResendCode } from '../Login/cognitoAuth';
 import './Profile.css';
 
 /*
 TODOS:
 
 add in profile and banner editing (aws s3)
-add in email editing (needs to send verification, cognito calls)
 */
 
 const Profile = () => {
@@ -14,16 +14,19 @@ const Profile = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   //Reveal states for each field
-  const [revealUsername, setRevealUsername] = useState(false);
   const [revealEmail, setRevealEmail] = useState(false);
   //not used for now
   const [revealPassword, setRevealPassword] = useState(false);
 
   //Modal states
-  const [modal, setModal] = useState<'username' | 'password' | null>(null);
+  const [modal, setModal] = useState<'username' | 'email' | 'email-verify' | 'password' | null>(null);
 
   //Username modal fields
   const [newUsername, setNewUsername] = useState('');
+
+  //Email modal fields
+  const [newEmail, setNewEmail] = useState('');
+  const [emailVerifyCode, setEmailVerifyCode] = useState('');
 
   //Password modal fields
   const [currentPassword, setCurrentPassword] = useState('');
@@ -36,10 +39,12 @@ const Profile = () => {
   //Masks a string with dots
   const mask = (str: string) => '•'.repeat(str.length);
 
-  const openModal = (type: 'username' | 'password') => {
+  const openModal = (type: 'username' | 'email' | 'password') => {
     setModal(type);
     setModalError('');
     setNewUsername('');
+    setNewEmail('');
+    setEmailVerifyCode('');
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
@@ -72,6 +77,59 @@ const Profile = () => {
       }
     } catch (err) {
       setModalError('Server error');
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
+  //Step 1 of email update, checks email availability then sends verification code via cognito
+  //Creates temp cognito user same as register to trigger verification email
+  const handleEmailSubmit = async () => {
+    if (!newEmail.trim()) {
+      setModalError('Email cannot be empty');
+      return;
+    }
+    setModalLoading(true);
+    try {
+      //Uses random temp password since cognito requires a password 
+      const tempPassword = `Temp@${Math.random().toString(36).slice(2, 10)}1A!`;
+      await cognitoSignUp(newEmail, tempPassword, user?.username ?? '');
+      setModal('email-verify');
+      setModalError('');
+    } catch (err: any) {
+      setModalError(err.message || 'Failed to send verification code');
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
+  //Step 2 of email update, confirms code then updates sql and authContext
+  //Deletes cognito temp user after verification (delete called by server api)
+  const handleEmailVerify = async () => {
+    if (!emailVerifyCode.trim()) {
+      setModalError('Please enter the verification code');
+      return;
+    }
+    setModalLoading(true);
+    try {
+      //Confirm code with cognito
+      await cognitoConfirmSignUp(newEmail, emailVerifyCode);
+
+      //Update email in sql and delete cognito temp user
+      const res = await fetch(`${API_URL}/user/email`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user?.userId, newEmail }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        updateUser({ email: newEmail });
+        closeModal();
+      } else {
+        setModalError(data.message || 'Failed to update email');
+      }
+    } catch (err: any) {
+      setModalError(err.message || 'Invalid verification code');
     } finally {
       setModalLoading(false);
     }
@@ -146,20 +204,17 @@ const Profile = () => {
           <div className="profile-field">
             <span className="profile-label">Username</span>
             <span className="profile-value">
-              {revealUsername ? user?.username : mask(user?.username ?? '')}
+              {user?.username}
             </span>
           </div>
           <div className="profile-actions">
-            <button className="reveal-btn" onClick={() => setRevealUsername(prev => !prev)}>
-              {revealUsername ? 'Hide' : 'Reveal'}
-            </button>
             <button className="edit-btn" onClick={() => openModal('username')}>Edit</button>
           </div>
         </div>
 
         <div className="profile-divider" />
 
-        {/* Email row, reveal only, no edit for now */}
+        {/* Email row */}
         <div className="profile-row">
           <div className="profile-field">
             <span className="profile-label">Email</span>
@@ -171,6 +226,7 @@ const Profile = () => {
             <button className="reveal-btn" onClick={() => setRevealEmail(prev => !prev)}>
               {revealEmail ? 'Hide' : 'Reveal'}
             </button>
+            <button className="edit-btn" onClick={() => openModal('email')}>Edit</button>
           </div>
         </div>
 
@@ -208,6 +264,59 @@ const Profile = () => {
               <button className="modal-cancel" onClick={closeModal}>Cancel</button>
               <button className="modal-save" onClick={handleUsernameUpdate} disabled={modalLoading}>
                 {modalLoading ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Email modal step 1, enter new email */}
+      {modal === 'email' && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <h3 className="modal-title">Update Email</h3>
+            <p className="modal-subtitle">A verification code will be sent to your new email</p>
+            <input
+              className="modal-input"
+              type="email"
+              placeholder="New email address"
+              value={newEmail}
+              onChange={e => setNewEmail(e.target.value)}
+            />
+            {modalError && <p className="modal-error">{modalError}</p>}
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={closeModal}>Cancel</button>
+              <button className="modal-save" onClick={handleEmailSubmit} disabled={modalLoading}>
+                {modalLoading ? 'Sending...' : 'Send Code'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Email modal step 2, enter verification code */}
+      {modal === 'email-verify' && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <h3 className="modal-title">Verify New Email</h3>
+            <p className="modal-subtitle">Enter the 6-digit code sent to {newEmail}</p>
+            <input
+              className="modal-input"
+              type="text"
+              placeholder="Verification code"
+              value={emailVerifyCode}
+              onChange={e => setEmailVerifyCode(e.target.value)}
+              maxLength={6}
+            />
+            {/* Resend code option using existing cognitoResendCode function */}
+            <p className="modal-resend" onClick={() => cognitoResendCode(newEmail)}>
+              Resend code
+            </p>
+            {modalError && <p className="modal-error">{modalError}</p>}
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={closeModal}>Cancel</button>
+              <button className="modal-save" onClick={handleEmailVerify} disabled={modalLoading}>
+                {modalLoading ? 'Verifying...' : 'Verify'}
               </button>
             </div>
           </div>
