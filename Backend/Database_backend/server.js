@@ -211,7 +211,6 @@ app.put("/user/email", async (req, res) => {
         UserPoolId: USER_POOL_ID,
         Username: newEmail,
       }).promise();
-      console.log(`server.js: Cognito user deleted for email update: ${newEmail}`);
     } catch (cognitoErr) {
       //Non-fatal, log and continue, resolve on cognito side if this shows up
       console.error("server.js: Cognito delete error (non-fatal):", cognitoErr.message);
@@ -221,6 +220,22 @@ app.put("/user/email", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Failed to update email" });
+  }
+});
+
+// Checks if an email is already taken in RDS before creating a Cognito user
+// Prevents phantom Cognito users from being created for duplicate emails
+app.get("/check-email", async (req, res) => {
+  const { email } = req.query;
+  try {
+    const [rows] = await db.execute(
+      "SELECT UserID FROM UserData WHERE uEmail = ?",
+      [email]
+    );
+    res.json({ available: rows.length === 0 });
+  } catch (err) {
+    console.error("server.js: check-email error:", err);
+    res.status(500).json({ available: false, message: "Check failed" });
   }
 });
 
