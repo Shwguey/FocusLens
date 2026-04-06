@@ -211,6 +211,7 @@ function Login() {
       />
       
       <div className="login-box">
+        <div key={stage} className="form-slide">
         <h2>
           {stage === "login" && "Login"}
           {stage === "register" && "Sign up"}
@@ -368,6 +369,7 @@ function Login() {
             Back to Register
           </p>
         )}
+        </div> {/* form-slide */}
       </div>
     </div>
   );
