@@ -7,6 +7,7 @@ import Home from './components/Home/Home'
 import Profile from './components/Profile/Profile'
 import Metrics from './components/Metrics/Metrics'
 import { AuthProvider } from './context/AuthContext'
+import { SettingsProvider } from './context/SettingsContext'
 
 function App() {
   const [isSessionActive, setIsSessionActive] = useState(false)
@@ -16,6 +17,7 @@ function App() {
   }
 
   return (
+    <SettingsProvider>
     <AuthProvider>
     <BrowserRouter>
       <Routes>
@@ -36,6 +38,7 @@ function App() {
       </Routes>
     </BrowserRouter>
     </AuthProvider>
+    </SettingsProvider>
   )
 }
 

@@ -36,7 +36,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             {user ? (
               //User logged in, only show log out button
               <button className="sidebar-btn sidebar-btn-signin" onClick={handleLogout}>
-                Log Out
+                Sign Out
               </button>
             ) : (
               //User not logged in, show sign in AND sign up buttons
