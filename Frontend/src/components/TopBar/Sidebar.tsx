@@ -80,7 +80,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 see them anyways */}
             {user && (
               <button className="sidebar-btn sidebar-btn-signin" onClick={handleLogout}>
-                Log Out
+                Sign Out
               </button>
             )}
           </div>
