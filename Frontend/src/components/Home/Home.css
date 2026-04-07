@@ -4,7 +4,7 @@
 
 .page-heading {
   font-size: 24px;
-  color: #e5e7eb;
+  color: var(--color-text-bright);
   margin-bottom: 24px;
 }
 
@@ -16,14 +16,16 @@
 }
 
 .snapshot-card {
-  background-color: #1a1a1a;
-  border: 1px solid #404040;
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 20px;
   width: 260px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  opacity: 0;
+  animation: slideUp 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .snapshot-row {
@@ -35,48 +37,34 @@
 .snapshot-label {
   font-size: 11px;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .snapshot-value {
   font-size: 13px;
-  color: #e5e7eb;
+  color: var(--color-text-bright);
 }
 
 .snapshot-divider {
-  border-top: 1px solid #404040;
+  border-top: 1px solid var(--color-border);
   margin: 4px 0;
 }
 
 .snapshot-duration {
-  color: #22c55e;
+  color: var(--color-success);
   font-weight: bold;
 }
 
 .no-sessions {
-  color: #6b7280;
+  color: var(--color-text-muted);
   font-size: 14px;
 }
 
-/* For snapshot card animation */
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-.snapshot-card {
-  background-color: #1a1a1a;
-  border: 1px solid #404040;
-  border-radius: 10px;
-  padding: 20px;
-  width: 260px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  opacity: 0;
-  animation: slideUp 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .snapshot-card:nth-child(1) { animation-delay: 0ms; }
